@@ -1,0 +1,16 @@
+camera_names: ['cam_left_wrist', 'cam_high', 'cam_right_wrist']
+action_dim: 16
+lr_backbone: 1.0e-5
+backbone: 'resnet18'
+dilation: False
+masks: False
+position_embedding: 'sine'
+dropout: 0.1
+nhead: 8
+encoder_layers: 4
+decoder_layers: 7
+prenorm: False
+no_encoder: False
+dim_feedforward: 3200
+hidden_dim: 512
+chunk_size: 100
