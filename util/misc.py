@@ -12,6 +12,7 @@ import datetime
 import pickle
 from packaging import version
 from typing import Optional, List
+import yaml
 
 import torch
 import torch.distributed as dist
@@ -466,3 +467,16 @@ def interpolate(input, size=None, scale_factor=None, mode="nearest", align_corne
         return _new_empty_tensor(input, output_shape)
     else:
         return torchvision.ops.misc.interpolate(input, size, scale_factor, mode, align_corners)
+
+def load_task_config(name):
+    directory = 'config/task_configs'
+    filename = f'{name}.yaml'
+    filepath = os.path.join(directory, filename)
+
+    if not os.path.isfile(filepath):
+        raise FileNotFoundError(f"Config file '{filename}' not found in '{directory}'")
+
+    with open(filepath, 'r') as file:
+        config = yaml.safe_load(file)
+    
+    return config

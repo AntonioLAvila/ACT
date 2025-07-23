@@ -4,12 +4,16 @@ import os
 from model.policy import ControllerACTPolicy
 import pickle
 import time
-from constants import FPS, PUPPET_GRIPPER_JOINT_OPEN
 import numpy as np
 from einops import rearrange
 import yaml
+import argparse
+from util.misc import load_task_config
 from aloha.robot_utils import move_grippers
 from aloha.real_env import make_real_env
+
+FPS = 50
+PUPPET_GRIPPER_JOINT_OPEN = 1.4910
 
 
 class SingleActionController():
@@ -147,15 +151,25 @@ def dead_rekckoning_turn(robot):
     robot.step(arm_action, base_action)
     time.sleep(2)
     robot.step(arm_action, (0, 0))
-    
 
-if __name__ == "__main__":
+
+def main(args):
     with open('config/model_configs/default_config.yaml', 'r') as f:
         model_config = yaml.safe_load(f)
-    with open('config/task_configs/pick_up_wafer.yaml', 'r') as f:
-        task_config = yaml.safe_load(f)
+    task_config = load_task_config(args['task_name'])
 
     robot = make_real_env(setup_robots=True, setup_base=True)
     sac = SingleActionController(model_config, task_config, robot)
     sac.run()
     sac.open_grippers()
+    
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--task_name', type=str, required=True, help='Name of the task (corresponding to task config YAML)')
+
+    args = parser.parse_args()
+    args = vars(args)
+
+    main(args)

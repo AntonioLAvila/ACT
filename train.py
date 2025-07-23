@@ -8,6 +8,7 @@ from copy import deepcopy
 from itertools import repeat
 from tqdm import tqdm
 from clearml import Task
+from util.misc import load_task_config
 from util.dataset import load_data # data functions
 from util.dataset import compute_dict_mean, set_seed, detach_dict, calibrate_linear_vel, postprocess_base_action # helper functions
 from model.policy import ACTPolicy
@@ -180,20 +181,6 @@ def train_bc(train_dataloader, val_dataloader, config, cml_task):
     print(f'Training finished:\nSeed {seed}, val loss {min_val_loss:.6f} at step {best_step}')
 
     return best_ckpt_info
-
-
-def load_task_config(name):
-    directory = 'config/task_configs'
-    filename = f'{name}.yaml'
-    filepath = os.path.join(directory, filename)
-
-    if not os.path.isfile(filepath):
-        raise FileNotFoundError(f"Config file '{filename}' not found in '{directory}'")
-
-    with open(filepath, 'r') as file:
-        config = yaml.safe_load(file)
-    
-    return config
 
 
 
