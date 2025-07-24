@@ -1,5 +1,5 @@
 '''
-config:
+act_model:
     * num_queries:          int
     * camera_names:         list[str]
     * vq:                   bool (False)
@@ -19,6 +19,11 @@ config:
     * dec_layers:           int (7)
     * pre_norm:             bool (False)
     * no_encoder:           bool (False)
+
+optimizer:
+    * kl_weight:    float (10)
+    * lr:           float
+    * weight_decay: float (1e-4)
 '''
 import torch.nn as nn
 from torch.nn import functional as F

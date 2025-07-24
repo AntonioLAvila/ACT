@@ -26,6 +26,7 @@ def main(args):
     model_config['lr'] = args['lr']
     model_config['weight_decay'] = args['weight_decay']
     model_config['kl_weight'] = args['kl_weight']
+    model_config['lr_backbone'] = args['lr_backbone']
 
 
     dataset_dir = os.path.expandvars(task_config['dataset_dir'])
@@ -45,12 +46,12 @@ def main(args):
         'episode_length': task_config['episode_length']
     }
 
-    # cml_task = Task.init(
-    #     project_name="mobile_aloha",
-    #     task_name="training",
-    #     task_type=Task.TaskTypes.training
-    # )
-    # cml_task.connect(training_config)
+    cml_task = Task.init(
+        project_name="mobile_aloha",
+        task_name="training",
+        task_type=Task.TaskTypes.training
+    )
+    cml_task.connect(training_config)
 
     train_dataloader, val_dataloader, stats, _ = \
         load_data(
@@ -138,13 +139,13 @@ def train_bc(train_dataloader, val_dataloader, config, cml_task):
                     best_ckpt_info = (step, min_val_loss, deepcopy(policy.serialize()))
             for k in list(validation_summary.keys()):
                 validation_summary[f'val_{k}'] = validation_summary.pop(k)            
-            # for k, v in validation_summary.items():
-            #     cml_task.get_logger().report_scalar(
-            #         title=k,
-            #         series='val',
-            #         value=v,
-            #         iteration=step
-            #     )
+            for k, v in validation_summary.items():
+                cml_task.get_logger().report_scalar(
+                    title=k,
+                    series='val',
+                    value=v,
+                    iteration=step
+                )
 
             print(f'Val loss:   {epoch_val_loss:.5f}')
             summary_string = ''
@@ -161,13 +162,13 @@ def train_bc(train_dataloader, val_dataloader, config, cml_task):
         loss = forward_dict['loss']
         loss.backward()
         optimizer.step()
-        # for k, v in forward_dict.items():
-        #     cml_task.get_logger().report_scalar(
-        #         title=k,
-        #         series='train',
-        #         value=v,
-        #         iteration=step
-        #     )
+        for k, v in forward_dict.items():
+            cml_task.get_logger().report_scalar(
+                title=k,
+                series='train',
+                value=v,
+                iteration=step
+            )
 
         if step % save_every == 0:
             ckpt_path = os.path.join(ckpt_dir, f'policy_step_{step}_seed_{seed}.ckpt')
@@ -195,6 +196,7 @@ if __name__ == "__main__":
     parser.add_argument('--lr', type=float, required=True, help='Learning rate')
     parser.add_argument('--kl_weight', type=int, required=True, help='')
 
+    parser.add_argument('--lr_backbone', type=int, default=1e-5, help='')
     parser.add_argument('--weight_decay', type=int, default=1e-4, help='')
     parser.add_argument('--validate_every', type=int, default=500, help='Validation frequency')
     parser.add_argument('--save_every', type=int, default=1000, help='Checkpoint saving frequency')
