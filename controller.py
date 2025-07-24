@@ -65,6 +65,8 @@ class SingleActionController():
     def run(self):
         # home the arms
         ts = self.reset()
+        print(f"RESET: {ts.observation['qpos']}")
+
         # create storage for history and aggregation
         if self.temporal_agg:
             all_time_actions = torch.zeros([self.max_timesteps, self.max_timesteps+self.num_queries, 16]).cuda()
@@ -73,6 +75,9 @@ class SingleActionController():
             start_time = time.time()
             culmulated_delay = 0
             for t in range(self.max_timesteps):
+
+                print(f"{ts.observation['qpos']=}")
+
                 loop_time = time.time()
                 
                 # get q obs
@@ -92,6 +97,9 @@ class SingleActionController():
                 if t % self.query_frequency == 0:
                     curr_image = self.get_image(ts, self.camera_names)
                     all_actions = self.policy(qpos, curr_image)
+                    temp = all_actions.cpu()
+                    print(f'MAG: {[np.linalg.norm(temp[:, i]) for i in range(temp.shape[1])]}')
+
                 
                 # assign action
                 if self.temporal_agg:
@@ -172,4 +180,43 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args = vars(args)
 
-    main(args)
+    # main(args)
+
+
+
+    robot = make_real_env(setup_robots=True, setup_base=True)
+
+    ts = robot.reset()
+
+    q_init = ts.observation['qpos']
+    qpos_cmd = q_init.copy()
+
+    for i in range(10):
+        print('looping')
+        time.sleep(1)
+
+        qpos_cmd += 0.001  # increment ALL joints slightly
+        ts = robot.step(qpos_cmd)
+        print(robot.get_qpos())
+
+
+    # ts = robot.reset()
+
+    # q_init = ts.observation['qpos']
+    # print(robot.get_qpos())
+
+    # for i in range(10):
+    #     print('looping')
+    #     time.sleep(1)
+
+    #     qpos_obs = ts.observation['qpos']
+    #     qpos = qpos_obs + 0.01
+
+    #     ts = robot.step(qpos)
+
+    #     print(robot.get_qpos())
+
+
+    # q_final = ts.observation['qpos']
+
+    # print(q_init - q_final)
