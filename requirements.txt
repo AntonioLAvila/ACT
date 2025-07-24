@@ -1,0 +1,12 @@
+aloha==0.0.0
+clearml==2.0.0
+einops==0.8.1
+h5py==3.11.0
+numpy==1.24.4
+opencv_python==4.11.0.86
+packaging==25.0
+PyYAML==6.0.2
+PyYAML==6.0.2
+torch==2.4.1
+torchvision==0.19.1
+tqdm==4.67.1
