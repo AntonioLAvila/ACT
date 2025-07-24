@@ -73,8 +73,7 @@ def main(args):
     with open(stats_path, 'wb') as f:
         pickle.dump(stats, f)
 
-    # best_ckpt_info = train_bc(train_dataloader, val_dataloader, training_config, cml_task)
-    best_ckpt_info = train_bc(train_dataloader, val_dataloader, training_config, None)
+    best_ckpt_info = train_bc(train_dataloader, val_dataloader, training_config, cml_task)
 
     best_step, min_val_loss, best_state_dict = best_ckpt_info
 
