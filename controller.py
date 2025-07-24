@@ -1,5 +1,5 @@
 import torch
-from util.dataset import set_seed
+from utils.dataset import set_seed
 import os
 from model.policy import ControllerACTPolicy
 import pickle
@@ -8,7 +8,7 @@ import numpy as np
 from einops import rearrange
 import yaml
 import argparse
-from util.misc import load_task_config
+from utils.misc import load_task_config
 from aloha.robot_utils import move_grippers
 from aloha.real_env import make_real_env
 
