@@ -8,9 +8,9 @@ from copy import deepcopy
 from itertools import repeat
 from tqdm import tqdm
 from clearml import Task
-from util.misc import load_task_config
-from util.dataset import load_data # data functions
-from util.dataset import compute_dict_mean, set_seed, detach_dict, calibrate_linear_vel, postprocess_base_action # helper functions
+from utils.misc import load_task_config
+from utils.dataset import load_data # data functions
+from utils.dataset import compute_dict_mean, set_seed, detach_dict, calibrate_linear_vel, postprocess_base_action # helper functions
 from model.policy import ACTPolicy
 
 
@@ -29,6 +29,7 @@ def main(args):
 
 
     dataset_dir = os.path.expandvars(task_config['dataset_dir'])
+    # ckpt_dir = os.path.expandvars(task_config['ckpt_dir'])
 
     training_config = {
         'num_steps': args['num_steps'],

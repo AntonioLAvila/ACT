@@ -21,7 +21,7 @@ class SingleActionController():
     def __init__(self, model_config, task_config, env, ckpt_name='policy_best.ckpt'):
         set_seed(1000)
         # handle configuation merge
-        ckpt_dir = task_config['ckpt_dir']
+        ckpt_dir = os.path.expandvars(task_config['ckpt_dir'])
         self.camera_names = task_config.get('camera_names', model_config['camera_names'])
         self.max_timesteps = task_config['episode_length']
         self.temporal_agg = task_config['temporal_agg']
