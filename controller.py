@@ -23,7 +23,7 @@ class SingleActionController():
         # handle configuation merge
         ckpt_dir = task_config['ckpt_dir']
         self.camera_names = task_config.get('camera_names', model_config['camera_names'])
-        self.max_timesteps = task_config['episode_len']
+        self.max_timesteps = task_config['episode_length']
         self.temporal_agg = task_config['temporal_agg']
         chunk_size = task_config.get('chunk_size', model_config['chunk_size']) # num_queries
         for k, v in task_config.items():
