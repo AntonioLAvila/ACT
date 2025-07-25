@@ -11,7 +11,7 @@ import argparse
 from utils.misc import load_task_config
 import matplotlib.pyplot as plt
 from aloha.robot_utils import move_grippers
-from aloha.real_env import make_real_env
+from aloha.real_env import make_real_env, make_real_env_and_spin
 
 FPS = 50
 PUPPET_GRIPPER_JOINT_OPEN = 1.4910
@@ -187,7 +187,7 @@ def main(args):
         model_config = yaml.safe_load(f)
     task_config = load_task_config(args['task_name'])
 
-    robot = make_real_env(setup_robots=True, setup_base=True)
+    robot = make_real_env_and_spin(setup_robots=True, setup_base=True)
     sac = SingleActionController(model_config, task_config, robot)
     sac.run()
     sac.open_grippers()
