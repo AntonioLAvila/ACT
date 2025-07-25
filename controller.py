@@ -182,6 +182,7 @@ def plot(qpos_history, target_history):
     plt.tight_layout()
     plt.show()
 
+
 def main(args):
     with open('config/model_configs/default_config.yaml', 'r') as f:
         model_config = yaml.safe_load(f)
@@ -202,45 +203,3 @@ if __name__ == "__main__":
     args = vars(args)
 
     main(args)
-
-    # [0.003, -1.845, 1.615, -0.004, -1.917, -0.009, 1.33] 
-    # [-0.009, -1.841, 1.624, 0, -1.908, 0.026, 1.322]
-
-    # [0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239]
-    # [0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239]
-
-    # import threading
-
-    # robot = make_real_env(setup_robots=True, setup_base=True)
-    # robot.reset()
-
-    # def print_qpos():
-    #     while True:
-    #         print(robot.get_qpos())
-    # threading.Thread(target=print_qpos, daemon=True).start()
-    # while True:
-    #     move_grippers(
-    #         [robot.follower_bot_left, robot.follower_bot_right],
-    #         [PUPPET_GRIPPER_JOINT_OPEN] * 2,
-    #         3
-    #     )
-
-    # ts = robot.reset()
-    # q_init = ts.observation['qpos']
-    # print(f'{q_init}, {len(q_init)}')
-
-    # for i in range(60):
-    #     print('looping')
-    #     time.sleep(1)
-
-    #     qpos_obs = ts.observation['qpos']
-    #     qpos = qpos_obs + 0.00
-
-    #     ts = robot.step(qpos)
-    #     print(f"{ts.observation['is_set_left']}, {ts.observation['is_set_right']}")
-
-    # q_final = ts.observation['qpos']
-
-    # print(q_init - q_final)
-
-    # q_init
