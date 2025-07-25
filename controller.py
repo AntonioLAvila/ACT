@@ -9,6 +9,7 @@ from einops import rearrange
 import yaml
 import argparse
 from utils.misc import load_task_config
+import matplotlib.pyplot as plt
 from aloha.robot_utils import move_grippers
 from aloha.real_env import make_real_env
 
@@ -73,6 +74,10 @@ class SingleActionController():
         with torch.inference_mode():
             start_time = time.time()
             culmulated_delay = 0
+
+            qpos_history = []
+            target_qpos_history = []
+
             for t in range(self.max_timesteps):
                 loop_time = time.time()
                 
@@ -117,9 +122,9 @@ class SingleActionController():
                 
                 # step the environment
                 ts = self.robot.step(target_qpos, base_action)
-                print(f"{ts.observation['is_set_left']}, {ts.observation['is_set_right']}")
-                print(ts.observation['qpos'])
 
+                qpos_history.append(qpos_numpy)
+                target_qpos_history.append(target_qpos)
 
                 # keep pace
                 duration = time.time() - loop_time
@@ -132,6 +137,7 @@ class SingleActionController():
                     print(f'Warning: step duration: {duration:.3f} s at step {t} longer than DT: {self.DT} s, culmulated delay: {culmulated_delay:.3f} s')
 
             print(f'Avg fps {self.max_timesteps / (time.time() - start_time)}')
+            plot(qpos_history, target_qpos_history)
 
     def get_image(self, ts, camera_names):
         curr_images = []
@@ -157,6 +163,24 @@ def dead_rekckoning_turn(robot):
     time.sleep(2)
     robot.step(arm_action, (0, 0))
 
+
+def plot(qpos_history, target_history):
+    qpos_array = np.array(qpos_history)     # Shape: (T, 14)
+    target_array = np.array(target_history) # Shape: (T, 14)
+    
+    num_dims = qpos_array.shape[1]
+    fig, axs = plt.subplots(num_dims, 1, figsize=(10, 2*num_dims), sharex=True)
+
+    for i in range(num_dims):
+        axs[i].plot(qpos_array[:, i], label='qpos', color='blue')
+        axs[i].plot(target_array[:, i], label='target', color='orange', linestyle='--')
+        axs[i].set_ylabel(f'Dim {i}')
+        axs[i].legend(loc='upper right')
+        axs[i].grid(True)
+
+    axs[-1].set_xlabel('Time Step')
+    plt.tight_layout()
+    plt.show()
 
 def main(args):
     with open('config/model_configs/default_config.yaml', 'r') as f:
