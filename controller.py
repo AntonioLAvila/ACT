@@ -172,7 +172,7 @@ def plot(qpos_history, target_history):
     fig, axs = plt.subplots(num_dims, 1, figsize=(10, 2*num_dims), sharex=True)
 
     for i in range(num_dims):
-        axs[i].plot(qpos_array[:, i], label='qpos', color='blue')
+        # axs[i].plot(qpos_array[:, i], label='qpos', color='blue')
         axs[i].plot(target_array[:, i], label='target', color='orange', linestyle='--')
         axs[i].set_ylabel(f'Dim {i}')
         axs[i].legend(loc='upper right')
@@ -201,7 +201,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args = vars(args)
 
-    main(args)
+    # main(args)
 
     # [0.003, -1.845, 1.615, -0.004, -1.917, -0.009, 1.33] 
     # [-0.009, -1.841, 1.624, 0, -1.908, 0.026, 1.322]
@@ -209,8 +209,21 @@ if __name__ == "__main__":
     # [0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239]
     # [0, -0.96, 1.16, 0, -0.3, 0, 0.02239, -0.02239]
 
+    import threading
 
-    # robot = make_real_env(setup_robots=True, setup_base=True)
+    robot = make_real_env(setup_robots=True, setup_base=True)
+    robot.reset()
+
+    def print_qpos():
+        while True:
+            print(robot.get_qpos())
+    threading.Thread(target=print_qpos, daemon=True).start()
+    while True:
+        move_grippers(
+            [robot.follower_bot_left, robot.follower_bot_right],
+            [PUPPET_GRIPPER_JOINT_OPEN] * 2,
+            3
+        )
 
     # ts = robot.reset()
     # q_init = ts.observation['qpos']
