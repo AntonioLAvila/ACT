@@ -8,7 +8,7 @@ import numpy as np
 from einops import rearrange
 import yaml
 import argparse
-from utils.misc import load_task_config
+from utils.loading import load_task_config, load_model_config
 import matplotlib.pyplot as plt
 from aloha.robot_utils import move_grippers
 from aloha.real_env import make_real_env, make_real_env_and_spin
@@ -18,7 +18,11 @@ PUPPET_GRIPPER_JOINT_OPEN = 1.4910
 
 
 class SingleActionController():
-
+    '''
+    Holds the code for loading and rolling out a single policy once.
+    NOTE: that `max_timesteps` is tunable. If the robot can't do the task
+    in the specified time, increase this.
+    '''
     def __init__(self, model_config, task_config, env, ckpt_name='policy_best.ckpt'):
         set_seed(1000)
         # handle configuation merge
@@ -123,6 +127,7 @@ class SingleActionController():
                 # step the environment
                 ts = self.robot.step(target_qpos, base_action)
 
+                # logging
                 qpos_history.append(qpos_numpy)
                 target_qpos_history.append(target_qpos)
 
@@ -131,13 +136,13 @@ class SingleActionController():
                 sleep_time = max(0, self.DT - duration)
                 time.sleep(sleep_time)
 
-                # logging
+                # more logging
                 if duration >= self.DT:
                     culmulated_delay += (duration - self.DT)
                     print(f'Warning: step duration: {duration:.3f} s at step {t} longer than DT: {self.DT} s, culmulated delay: {culmulated_delay:.3f} s')
 
             print(f'Avg fps {self.max_timesteps / (time.time() - start_time)}')
-            plot(qpos_history, target_qpos_history)
+            # plot(qpos_history, target_qpos_history)
 
     def get_image(self, ts, camera_names):
         curr_images = []
@@ -184,8 +189,7 @@ def plot(qpos_history, target_history):
 
 
 def main(args):
-    with open('config/model_configs/default_config.yaml', 'r') as f:
-        model_config = yaml.safe_load(f)
+    model_config = load_model_config('default_config')
     task_config = load_task_config(args['task_name'])
 
     robot = make_real_env_and_spin(setup_robots=True, setup_base=True)

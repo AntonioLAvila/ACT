@@ -8,15 +8,14 @@ from copy import deepcopy
 from itertools import repeat
 from tqdm import tqdm
 from clearml import Task
-from utils.misc import load_task_config
+from utils.loading import load_task_config, load_model_config
 from utils.dataset import load_data # data functions
 from utils.dataset import compute_dict_mean, set_seed, detach_dict, calibrate_linear_vel, postprocess_base_action # helper functions
 from model.policy import ACTPolicy
 
 
 def main(args):
-    with open('config/model_configs/default_config.yaml', 'r') as f:
-        model_config = yaml.safe_load(f)
+    model_config = load_model_config('defualt_config')
     task_config = load_task_config(args['task_name'])
 
     # override model
