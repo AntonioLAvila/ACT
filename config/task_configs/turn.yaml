@@ -1,0 +1,4 @@
+episode_length: 100
+temporal_agg: False
+ckpt_dir: '${HOME}/ckpts/turn' # only matters for controller
+dataset_dir: "${HOME}/aloha_data/turn"
