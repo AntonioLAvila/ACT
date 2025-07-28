@@ -1,4 +1,4 @@
 episode_length: 550
 temporal_agg: False
-ckpt_dir: '${HOME}/ckpts/pick_up_wafer_B64_20k' # only matters for controller
+ckpt_dir: '${HOME}/ckpts/pick_up_wafer_100k' # only matters for controller
 dataset_dir: "${HOME}/aloha_data/pick_up_wafer"
