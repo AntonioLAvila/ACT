@@ -1,5 +1,4 @@
 import torch
-import yaml
 import numpy as np
 import os
 import pickle
@@ -8,7 +7,7 @@ from copy import deepcopy
 from itertools import repeat
 from tqdm import tqdm
 from clearml import Task
-from utils.loading import load_task_config, load_model_config
+from utils.util import load_task_config, load_model_config
 from utils.dataset import load_data # data functions
 from utils.dataset import compute_dict_mean, set_seed, detach_dict, calibrate_linear_vel, postprocess_base_action # helper functions
 from model.policy import ACTPolicy

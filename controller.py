@@ -6,10 +6,8 @@ import pickle
 import time
 import numpy as np
 from einops import rearrange
-import yaml
 import argparse
-from utils.loading import load_task_config, load_model_config
-import matplotlib.pyplot as plt
+from utils.util import load_task_config, load_model_config, plot
 from aloha.robot_utils import move_grippers
 from aloha.real_env import make_real_env, make_real_env_and_spin
 
@@ -30,6 +28,7 @@ class SingleActionController():
         self.camera_names = task_config.get('camera_names', model_config['camera_names'])
         self.max_timesteps = task_config['episode_length']
         self.temporal_agg = task_config['temporal_agg']
+        self.base_only = task_config['base_only']
         chunk_size = task_config.get('chunk_size', model_config['chunk_size']) # num_queries
         for k, v in task_config.items():
             if k in model_config:
@@ -125,7 +124,10 @@ class SingleActionController():
                 base_action = action[-2:]
                 
                 # step the environment
-                ts = self.robot.step_no_reqs(action=target_qpos, base_action=base_action)
+                if self.base_only:
+                    ts = self.robot.step_no_reqs(base_action=base_action)
+                else:
+                    ts = self.robot.step_no_reqs(action=target_qpos, base_action=base_action)
 
                 # logging
                 qpos_history.append(qpos_numpy)
@@ -167,25 +169,6 @@ def dead_rekckoning_turn(robot):
     robot.step_no_reqs(base_action=base_action)
     time.sleep(2)
     robot.step_no_reqs(base_action=(0, 0))
-
-
-def plot(qpos_history, target_history):
-    qpos_array = np.array(qpos_history)     # Shape: (T, 14)
-    target_array = np.array(target_history) # Shape: (T, 14)
-    
-    num_dims = qpos_array.shape[1]
-    fig, axs = plt.subplots(num_dims, 1, figsize=(10, 2*num_dims), sharex=True)
-
-    for i in range(num_dims):
-        axs[i].plot(qpos_array[:, i], label='qpos', color='blue')
-        axs[i].plot(target_array[:, i], label='target', color='orange', linestyle='--')
-        axs[i].set_ylabel(f'Dim {i}')
-        axs[i].legend(loc='upper right')
-        axs[i].grid(True)
-
-    axs[-1].set_xlabel('Time Step')
-    plt.tight_layout()
-    plt.show()
 
 
 def main(args):
