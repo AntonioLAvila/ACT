@@ -177,11 +177,11 @@ def main(args):
 
     robot = make_real_env_and_spin(setup_robots=True, setup_base=True)
 
-    # sac = SingleActionController(model_config, task_config, robot, 'policy_step_40000_seed_0.ckpt')
-    # sac.run()
-    # sac.open_grippers()
+    sac = SingleActionController(model_config, task_config, robot, 'policy_step_40000_seed_0.ckpt')
+    sac.run()
+    sac.open_grippers()
 
-    dead_rekckoning_turn(robot)
+    # dead_rekckoning_turn(robot)
 
     robot.shutdown()
     
