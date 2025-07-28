@@ -125,7 +125,7 @@ class SingleActionController():
                 base_action = action[-2:]
                 
                 # step the environment
-                ts = self.robot.step(target_qpos, base_action)
+                ts = self.robot.step_no_reqs(action=target_qpos, base_action=base_action)
 
                 # logging
                 qpos_history.append(qpos_numpy)
@@ -163,10 +163,10 @@ def dead_rekckoning_turn(robot):
     Turn right for 2 seconds at pi/6 rad/s for a 60 deg turn.
     We have no gyro :,) wtf
     '''
-    arm_action, base_action = robot.get_qpos(), (0, -np.pi/6) # linear, angular
-    robot.step(arm_action, base_action)
+    base_action = (0, -np.pi/6) # linear, angular
+    robot.step_no_reqs(base_action=base_action)
     time.sleep(2)
-    robot.step(arm_action, (0, 0))
+    robot.step_no_reqs(base_action=(0, 0))
 
 
 def plot(qpos_history, target_history):
@@ -194,16 +194,19 @@ def main(args):
 
     robot = make_real_env_and_spin(setup_robots=True, setup_base=True)
 
-    dead_rekckoning_turn(robot)
     # sac = SingleActionController(model_config, task_config, robot, 'policy_step_40000_seed_0.ckpt')
     # sac.run()
     # sac.open_grippers()
+
+    dead_rekckoning_turn(robot)
+
+    robot.shutdown()
     
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--task_name', type=str, required=True, help='Name of the task (corresponding to task config YAML)')
+    parser.add_argument('--task_name', type=str, required=False, help='Name of the task (corresponding to task config YAML)')
 
     args = parser.parse_args()
     args = vars(args)
