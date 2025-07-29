@@ -14,7 +14,7 @@ from model.policy import ACTPolicy
 
 
 def main(args):
-    model_config = load_model_config('defualt_config')
+    model_config = load_model_config('default_config')
     task_config = load_task_config(args['task_name'])
 
     # override model
