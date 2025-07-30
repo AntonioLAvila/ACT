@@ -172,7 +172,7 @@ def dead_rekckoning_turn(robot):
 
 
 def main(args):
-    model_config = load_model_config('default_config')
+    model_config = load_model_config(args['model_config'])
     task_config = load_task_config(args['task_name'])
 
     robot = make_real_env_and_spin(setup_robots=True, setup_base=True)
@@ -191,6 +191,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--task_name', type=str, required=False, help='Name of the task (corresponding to task config YAML)')
 
+    parser.add_argument('--model_config', type=str, required=False, default='default_config', help='Name of the model config (corresponding to model config YAML)')
     args = parser.parse_args()
     args = vars(args)
 
