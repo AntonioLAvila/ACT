@@ -14,7 +14,7 @@ from model.policy import ACTPolicy
 
 
 def main(args):
-    model_config = load_model_config('default_config')
+    model_config = load_model_config(args['model_config'])
     task_config = load_task_config(args['task_name'])
 
     # override model
@@ -199,6 +199,8 @@ if __name__ == "__main__":
     parser.add_argument('--save_every', type=int, default=1000, help='Checkpoint saving frequency')
     parser.add_argument('--seed', type=int, default=0, help='Random seed')
     parser.add_argument('--train_ratio', type=float, default=0.95, help='Train/val split ratio')
+    parser.add_argument('--model_config', type=str, default='default_config')
+
 
     args = parser.parse_args()
     args = vars(args)
