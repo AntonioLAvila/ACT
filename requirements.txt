@@ -1,4 +1,3 @@
-aloha==0.0.0
 clearml==2.0.0
 einops==0.8.1
 h5py==3.11.0
