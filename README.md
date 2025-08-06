@@ -13,3 +13,5 @@ Once you've collected data and have a model and task config. `dataset_dir` from 
 ## Running:
 
 Once you have a policy you'd like to run. Specify the location of the checkpoints in your task config. By default the controller loads `policy_best.ckpt` in the checkpoint directory. To test the controller, run `pyhthon3 controller.py --task_name <your task name>`. Setting `base_only` in a task config only executes the base motions of a policy (however there will be issues if you include camera data since the arms won't be moving in the way the policy would expect). Only set it if you know what you're doing.
+
+### Credit: [ACT paper](https://arxiv.org/pdf/2304.13705)
