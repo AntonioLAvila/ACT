@@ -1,4 +1,4 @@
-episode_length: 100
+episode_length: 200
 base_only: True
 temporal_agg: False
 ckpt_dir: '${HOME}/ckpts/turn' # only matters for controller
