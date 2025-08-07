@@ -1,0 +1,8 @@
+episode_length: 100
+base_only: True
+temporal_agg: False
+ckpt_dir: '${HOME}/ckpts/turn_single_cam' # only matters for controller
+dataset_dir: "${HOME}/aloha_data/turn_single_cam"
+
+camera_names: ['cam_high']
+

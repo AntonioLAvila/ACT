@@ -1,6 +1,0 @@
-episode_length: 550
-chunk_size: 175
-temporal_agg: False
-base_only: False
-ckpt_dir: '${HOME}/ckpts/pick_up_wafer_175' # only matters for controller
-dataset_dir: "${HOME}/aloha_data/pick_up_wafer"

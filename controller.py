@@ -18,6 +18,7 @@ PUPPET_GRIPPER_JOINT_OPEN = 1.4910
 class SingleActionController():
     '''
     Holds the code for loading and rolling out a single policy once.
+
     NOTE: that `max_timesteps` is tunable. If the robot can't do the task
     in the specified time, increase this.
     '''
@@ -163,7 +164,6 @@ class SingleActionController():
 def dead_rekckoning_turn(robot):
     '''
     Turn right for 2 seconds at pi/6 rad/s for a 60 deg turn.
-    We have no gyro :,) wtf
     '''
     base_action = (0, -np.pi/6) # linear, angular
     robot.step_no_reqs(base_action=base_action)

@@ -1,0 +1,5 @@
+episode_length: 500
+temporal_agg: False
+base_only: False
+ckpt_dir: '${HOME}/ckpts/set_wafer' # only matters for controller
+dataset_dir: "${HOME}/aloha_data/set_wafer"
