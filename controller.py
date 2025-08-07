@@ -29,8 +29,10 @@ class SingleActionController():
         self.camera_names = task_config.get('camera_names', model_config['camera_names'])
         self.max_timesteps = task_config['episode_length']
         self.temporal_agg = task_config['temporal_agg']
-        self.base_only = task_config['base_only']
         chunk_size = task_config.get('chunk_size', model_config['chunk_size']) # num_queries
+        self.base_only = False
+        if 'base_only' in task_config:
+            self.base_only = task_config['base_only']
         for k, v in task_config.items():
             if k in model_config:
                 model_config[k] = v
